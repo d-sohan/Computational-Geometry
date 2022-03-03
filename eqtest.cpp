@@ -44,6 +44,7 @@ int main()
         eq.insert(uep, i);
         eq.insert(lep);
     }
+    eq.show_tree();
     while (!eq.empty()) {
         auto event_ptr = eq.next();
         auto ep = event_ptr->key;
