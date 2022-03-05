@@ -113,7 +113,7 @@ void Event_queue::remove(Event* z)
     Event* y = z;
     Event* x = z;
     bool y_org_color = y->color;
-    if (z->left = nil) {
+    if (z->left == nil) {
         x = z->right;
         transplant(z, z->right);
     }
