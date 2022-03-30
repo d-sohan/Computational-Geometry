@@ -10,13 +10,13 @@
 
 
 
-void handle(const Event_point& ep, const std::vector<int>& start_seg)
+void handle(const Event_point& ep, const std::vector<int>& up)
 {
-    std::cout << "(" << ep.x << ", " << ep.y << "): [";
-    for (auto seg : start_seg) {
-        std::cout << seg << ", ";
-    }
-    std::cout << "]" << std::endl;
+    // std::cout << "(" << ep.x << ", " << ep.y << "): [";
+    // for (auto seg : start_seg) {
+    //     std::cout << seg << ", ";
+    // }
+    // std::cout << "]" << std::endl;
 }
 
 

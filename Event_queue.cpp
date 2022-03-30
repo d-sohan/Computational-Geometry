@@ -1,24 +1,41 @@
 #include "Event_queue.h"
+#include <cmath>
 
 
+bool epeq(double x, double y) {
+    return fabs(x - y) < DEVIATION;
+}
+bool eplt(double x, double y) {
+    return !epeq(x, y) && x < y;
+}
+bool epgt(double x, double y) {
+    return !epeq(x, y) && x > y;
+}
+double epmin(double x, double y) {
+    if (epeq(x, y) || eplt(x, y)) return x;
+    return y;
+}
 
-
+double epmax(double x, double y) {
+    if (epeq(x, y) || epgt(x, y)) return x;
+    return y;
+}
 
 
 bool operator==(const Event_point& ep1, const Event_point& ep2)
 {
-    return (ep1.x == ep2.x && ep1.y == ep2.y);
+    return (epeq(ep1.x, ep2.x) && epeq(ep1.y, ep2.y) && ep1.null_ep == ep2.null_ep);
 }
 
 bool operator!=(const Event_point& ep1, const Event_point& ep2)
 {
-    return (ep1.x != ep2.x || ep1.y != ep2.y);
+    return (ep1.x != ep2.x || ep1.y != ep2.y || ep1.null_ep != ep2.null_ep);
 }
 
 
 bool operator<(const Event_point& ep1, const Event_point& ep2)
 {
-    return (ep1.y > ep2.y || (ep1.y == ep2.y && ep1.x < ep2.x));
+    return ((ep1.null_ep == false && ep2.null_ep == false) && (epgt(ep1.y , ep2.y) || epeq(ep1.y , ep2.y) && eplt(ep1.x , ep2.x)));
 }
 
 
@@ -54,8 +71,8 @@ void Event_queue::preorder(Event* x, int indent)
 
         std::cout << ": [";
         auto& segments = x->starting_segments;
-        for (const auto& segment : segments) {
-            std::cout << segment << ", ";
+        for (auto& segment : segments) {
+            std::cout << segment->number << ", ";
         }
         std::cout << "]" << std::endl;
         
@@ -74,16 +91,16 @@ void Event_queue::preorder(Event* x, int indent)
 
 
 
-void Event_queue::insert(const Event_point& ep, int seg)
+void Event_queue::insert(const Event_point& ep, const Line_segment* lsptr)
 {
     Event* y = search(ep);
     if (y != nil) {
-        if (seg != -1) {
+        if (lsptr != nullptr) {
             auto& segments = y->starting_segments;
             for (const auto& segment : segments) {
-                if (segment == seg) return;
+                if (segment == lsptr) return;
             }
-            segments.push_back(seg);
+            segments.push_back(lsptr);
         }
         return;
     }
@@ -93,7 +110,7 @@ void Event_queue::insert(const Event_point& ep, int seg)
         if (ep < x->key) x = x->left;
         else x = x->right;
     }
-    Event* z = new Event(ep, seg);
+    Event* z = new Event(ep, lsptr);
     z->left = nil;
     z->right = nil;
     z->parent = y;
