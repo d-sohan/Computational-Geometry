@@ -14,7 +14,9 @@
 
 
 
-
+/**
+ * Orientation is used for managing slopes of line segments
+ */
 class Orientation {
     double slope;
 public:
@@ -78,7 +80,9 @@ int ls_position(const Line_segment* ls, const Event_point& p);
 
 
 class Status_structure {
-    
+    /**
+     * Segment is the node of the Status Structure tree it contains a line segment pointer and other members for tree balancing
+     */
     struct Segment {
         Segment* left;
         Segment* right;
@@ -89,12 +93,12 @@ class Status_structure {
             left{ nullptr }, right{ nullptr }, parent{ nullptr }, color{ BLACK }, key{ ls } {}
     };
 
-    
+
 private:
     Segment* nil;
     Segment* root;
 
-    
+
 public:
     Status_structure() : nil{ new Segment() }, root{ nil } {}
 
@@ -115,17 +119,17 @@ public:
     /**
      * returns the segment immediately to the right the segment s (successor), nil otherwise
      */
-    
+
     const Segment* find_right_neighbor(const Segment* s);
     /**
      * returns the left most segment in the status structure which is present in U(p) U C(p).
      */
-    
+
     const Segment* search_leftmost(std::vector<const Segment*>& vls1, std::vector<const Segment*>& vls2);
     /**
      * returns the right most segment in the status structure which is present in U(p) U C(p).
      */
-    
+
     const Segment* search_rightmost(std::vector<const Segment*>& vls1, std::vector<const Segment*>& vls2);
 
     /**
@@ -135,12 +139,14 @@ public:
     /**
      * returns a vector of segments that store the line segments having the event point as their interior point
      */
-    
+
     std::vector<const Segment*> get_cp(const Event_point& ep);
+
+
     /**
      * insert a line segment in the status structure which has the event point as its upper endpoint
      */
-    
+
 
     void insert(const Line_segment* ls, const Event_point& p);
     void remove(const Segment*);
@@ -151,24 +157,34 @@ public:
         inorder(root, vls);
         return vls;
     }
-    
+    /**
+     * insert a line segment in the status structure which has the event point as its upper endpoint
+     */
     void show_tree() { preorder(root, 0); }
 
     ~Status_structure() { delete nilify(root); }
 
-    
+
 private:
-    
+    /**
+     * helper function which finds the left neighbor of a segment recursively
+     */
     Segment* fln(const Event_point& p, Segment* s);
-    
+    /**
+     * helper function which finds the right neighbor of a segment recursively
+     */
     Segment* frn(const Event_point& p, Segment* s);
-    
+    /**
+     * helper function to remove const and return mutable segment pointer
+     */
     Segment* deconst(const Segment*);
-    
+    /**
+     * search for the segment node in the status structure based on  line segment
+     */
     Segment* search(const Line_segment* ls, Segment* s);
-    
+
     void inorder(Segment* x, std::vector<const Segment*>& vls);
-    
+
     void preorder(Segment* x, int indent);
 
     Segment* tree_minimum(Segment* x);

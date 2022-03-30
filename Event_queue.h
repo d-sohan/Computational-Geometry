@@ -44,15 +44,32 @@ struct Line_segment {
 };
 
 
-
+    /**
+     * check if event point coordinates are equal (difference is less than DEVIATION)
+     */
 bool epeq(double x, double y);
+    /**
+     * check which event point coordinate is less than the other
+     */
 bool eplt(double x, double y);
+    /**
+     * check which event point coordinate is greater than the other
+     */
 bool epgt(double x, double y);
+    /**
+     * return maximum of event point coordinates
+     */
 double epmax(double x, double y);
+    /**
+     * return minimum of even point coordinates
+     */
 double epmin(double x, double y);
 
+
 class Event_queue {
-    
+    /**
+     * Event is the node of the Event queue tree it contains a event point and other members for tree balancing
+     */
     struct Event {
         Event* left;
         Event* right;
@@ -67,23 +84,49 @@ class Event_queue {
             if (lsptr != nullptr) starting_segments.push_back(lsptr);
         }
     };
-    
+
 private:
     Event* nil;
     Event* root;
 
-    
+
 public:
     Event_queue() : nil{ new Event() }, root{ nil } {}
+
+    /**
+     * return pointer to the next event
+     */
     Event* next() { return tree_minimum(root); }
+
+    /**
+     * search in the event queue for a event point
+     */
     Event* search(const Event_point& ep);
+
+    /**
+     * insert event point into event queue
+     */
     void insert(const Event_point& ep, const Line_segment* lsptr = nullptr);
+
+    /**
+     * remove a event node from the qvent queue
+     */
     void remove(Event*);
+    /**
+     * check if a event node is nil
+     */
     bool empty(Event * ev) { return ev == nil; }
+    /**
+     * check if the event queue is empty
+     */
     bool empty() { return root == nil; }
+
+    /**
+     * show a visual of the event queue
+     */
     void show_tree() { preorder(root, 0); }
     ~Event_queue() { delete nilify(root); }
-    
+
 private:
     Event* tree_minimum(Event* x);
     Event* nilify(Event* x);
